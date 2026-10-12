@@ -1,11 +1,17 @@
 import express from "express"  
-import { createUserSchema } from "./types"
+import { createAvatarSchema, createUserSchema } from "./types"
 import { prisma } from "./db";
-
+import { GoogleGenAI } from "@google/genai";
+import fs from "fs"
+import { createImage } from "./image";
+import axios from "axios";
+import { uuid } from "zod";
 const app = express()
-
 app.use(express.json())
 
+const ai = new GoogleGenAI({
+  apiKey : process.env.GOOGLE_API_KEY
+})
 
 
 app.post('/api/v1/signup', async (req,res) => {
@@ -18,7 +24,7 @@ app.post('/api/v1/signup', async (req,res) => {
   }
   const {username, password} = data
 
-  const hashedPassword = Bun.password.hash(password)
+  const hashedPassword = await Bun.password.hash(password)
   const existingUser = await prisma.users.findUnique({
     where : {
       username : username
@@ -26,7 +32,7 @@ app.post('/api/v1/signup', async (req,res) => {
   })
 
   if(existingUser){
-    res.status(400).json({
+    return res.status(400).json({
       message : "username alreadye exists"
     })
   }
@@ -79,3 +85,30 @@ app.post('/api/v1/signin', async (req,res) =>{
   })
   })
 
+
+
+app.post("/api/v1/avatar", async (req,res) => {
+
+  const {success, data }= createAvatarSchema.safeParse(req.body)
+
+  if(!success) {
+    return res.status(400).json({
+      message : "incorrect credentials"
+    })
+  }
+  
+    const {name , image} = data
+    
+    const leftView = uuid()
+    const topView = uuid()
+
+    await Promise.all([
+      createImage("create a top view of the image", image,  `./assets/${leftView}`),
+      createImage("create a top view of the image", image,  `./assets/${topView}`)
+
+    ])
+
+
+  
+  }
+)

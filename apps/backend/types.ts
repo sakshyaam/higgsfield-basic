@@ -6,26 +6,7 @@ export const createUserSchema = z.object({
     password : z.string()
 })
 
-const signupSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(8),
-    name: z.string().optional(),
-  });
-  
-  const signinSchema = z.object({
-    email: z.string().email(),
-    password: z.string(),
-  });
-  
-  const avatarSchema = z.object({
-    name: z.string().optional(),
-    image: z.string().optional(),
-    prompt: z.string().optional(),
-  });
-  
-  const videoSchema = z.object({
-    prompt: z.string().optional(),
-    avatarId: z.string().optional(),
-    modelId: z.string().optional(),
-  });
-  
+export const createAvatarSchema = z.object({
+    name : z.string(),
+    image : z.string().url()
+})

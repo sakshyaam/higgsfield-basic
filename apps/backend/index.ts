@@ -1,101 +1,81 @@
-import express from "express";
-import { z } from "zod";
+import express from "express"  
+import { createUserSchema } from "./types"
+import { prisma } from "./db";
 
-const app = express();
-app.use(express.json());
+const app = express()
 
-const PORT = Number(process.env.PORT) || 3000;
+app.use(express.json())
 
-// ---------- schemas ----------
-const signupSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-  name: z.string().optional(),
-});
 
-const signinSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
-});
 
-const avatarSchema = z.object({
-  name: z.string().optional(),
-  image: z.string().optional(),
-  prompt: z.string().optional(),
-});
+app.post('/api/v1/signup', async (req,res) => {
+  const {success, data} = createUserSchema.safeParse(req.body)
 
-const videoSchema = z.object({
-  prompt: z.string().optional(),
-  avatarId: z.string().optional(),
-  modelId: z.string().optional(),
-});
+  if(!success) {
+    return res.status(400).json({
+      message : "incorrect credentials"
+    })
+  }
+  const {username, password} = data
 
-// ---------- helpers ----------
-function handle(schema: z.ZodType<any>, handler: (data: any, req: express.Request, res: express.Response) => void) {
-  return (req: express.Request, res: express.Response) => {
-    const parsed = schema.safeParse(req.body);
-    if (!parsed.success) {
-      res.status(400).json({ error: parsed.error.flatten() });
-      return;
+  const hashedPassword = Bun.password.hash(password)
+  const existingUser = await prisma.users.findUnique({
+    where : {
+      username : username
     }
-    handler(parsed.data, req, res);
-  };
-}
+  })
 
-// ---------- auth ----------
-app.post("/api/v1/signup", handle(signupSchema, (data, _req, res) => {
-  // TODO: create user
-  res.status(201).json({ message: "signup", data });
-}));
+  if(existingUser){
+    res.status(400).json({
+      message : "username alreadye exists"
+    })
+  }
 
-app.post("/api/v1/signin", handle(signinSchema, (data, _req, res) => {
-  // TODO: authenticate user
-  res.status(200).json({ message: "signin", data });
-}));
+  const user = await prisma.users.create({
+    data : {
+      username : data.username,
+      password : hashedPassword
+    }
+  })
 
-app.get("/api/v1/me", (_req, res) => {
-  // TODO: return current user
-  res.status(200).json({ message: "me" });
-});
+  return res.status(200).json({
+    message : "SignUp Successfull",
+    username : username
+  })
+})
 
-// ---------- avatars ----------
-app.post("/api/v1/avatar", handle(avatarSchema, (data, _req, res) => {
-  // TODO: create avatar
-  res.status(201).json({ message: "create avatar", data });
-}));
 
-app.get("/api/v1/avatar/:avatarId", (req, res) => {
-  // TODO: get single avatar
-  res.status(200).json({ message: "get avatar", avatarId: req.params.avatarId });
-});
+app.post('/api/v1/signin', async (req,res) =>{
 
-app.get("/api/v1/avatars", (_req, res) => {
-  // TODO: list avatars
-  res.status(200).json({ message: "list avatars" });
-});
+  const {success, data} = createUserSchema.safeParse(req.body)
 
-// ---------- videos ----------
-app.post("/api/v1/video", handle(videoSchema, (data, _req, res) => {
-  // TODO: create video
-  res.status(201).json({ message: "create video", data });
-}));
+  if(!success) {
+    return res.status(400).json({
+      message : "incorrect credentials"
+    })
+  }
+  const {username, password} = data
 
-app.get("/api/v1/video/:videoId", (req, res) => {
-  // TODO: get single video
-  res.status(200).json({ message: "get video", videoId: req.params.videoId });
-});
+  const user = await prisma.users.findUnique({
+    where : {
+      username : username
+    }
+  })
 
-app.get("/api/v1/videos", (_req, res) => {
-  // TODO: list videos
-  res.status(200).json({ message: "list videos" });
-});
+  if (!user) {
+    return res.status(401).json({ message: "Invalid username or password" });
+  }
 
-// ---------- models ----------
-app.get("/api/v1/models", (_req, res) => {
-  // TODO: list AI models
-  res.status(200).json({ message: "list models" });
-});
+  const isMatch = await Bun.password.verify(password, user?.password)
 
-app.listen(3000, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+  if(!isMatch) {
+    return res.status(400).json({
+      message : "incorrect password"
+    })
+  }
+
+  return res.status(200).json({
+    message : "user signedIn"
+  })
+  })
+

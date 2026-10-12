@@ -24,7 +24,7 @@ model Users {
 model Avatar {
       id        String     @id @default(uuid()) 
       user      Users   @relation(fields: [userid], references: [id])
-      userid    Int
+      userid    String
       avatarimages  AvatarImage[]
       avatarVideoReferences  AvatarVideoReference[]
 }
@@ -34,6 +34,11 @@ model AvatarImage{
       avatarId String
       type     AvatarImageType
       avatar   Avatar  @relation(fields: [avatarId], references: [id])
+}
+
+enum AvatarImageType {
+  User
+  Model
 }
 
 model AvatarVideo {
@@ -49,6 +54,12 @@ model AvatarVideo {
       avatarVideoReferences AvatarVideoReference[]
       user       Users      @relation(fields: [userId], references: [id])
 
+}
+
+enum AvatarVideoStatus {
+  Done 
+  Pending
+  Error
 }
 
 model AvatarVideoReference {

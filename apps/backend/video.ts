@@ -7,15 +7,13 @@ const ai = new GoogleGenAI({
 
 export async function generateVideo(prompt : string, imageUrls : string[], outputPath : string){
 
-    const base64Images = await Promise.all(
-        imageUrls.map(async (imageUrl) => {
-          const response = await axios.get(imageUrl, {
-            responseType: "arraybuffer"
-          });
-      
-          return Buffer.from(response.data).toString("base64");
-        })
-      );
+    const imageBuffers = await Promise.all( imageUrls.map( async imageUrl => {
+        const base64Image = await axios.get(
+            imageUrl, {
+                responseType : 'arraybuffer'
+            }
+        ).
+        then(response => Buffer.from(response.data, "binary")).toString('base64')
         
 
 

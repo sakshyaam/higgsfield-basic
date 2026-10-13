@@ -4,6 +4,7 @@ import { prisma } from "./db";
 import { GoogleGenAI } from "@google/genai";
 import fs from "fs"
 import { createImage } from "./image";
+import { generateVideo } from "./video";
 import axios from "axios";
 import { uuid } from "zod";
 const app = express()
@@ -108,7 +109,12 @@ app.post("/api/v1/avatar", async (req,res) => {
 
     ])
 
-
-  
   }
 )
+
+
+app.post("/api/v1/video",  async (req,res) => {
+
+  await generateVideo("The video opens with a medium, eye-level shot of a beautiful woman with dark hair and warm brown eyes. She wears a magnificent, high-fashion flamingo dress with layers of pink and fuchsia feathers, complemented by whimsical pink, heart-shaped sunglasses. She walks with serene confidence through the crystal-clear, shallow turquoise water of a sun-drenched lagoon. The camera slowly pulls back to a medium-wide shot, revealing the breathtaking scene as the dress's long train glides and floats gracefully on the water's surface behind her. The cinematic, dreamlike atmosphere is enhanced by the vibrant colors of the dress against the serene, minimalist landscape, capturing a moment of pure elegance and high-fashion fantasy.", "","./output/video.mp4")
+
+})

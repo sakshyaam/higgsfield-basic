@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import axios from "axios"
 import { BACKEND_URL } from "../../config";
-import { useNavigate } from "react-router";
+import { data, useNavigate } from "react-router";
 import { Query, QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 
@@ -18,8 +18,6 @@ async function signup({username, password} : {username : string, password : stri
     return response.data
     
 }
-
-
 export function Signup() {
 
       const [username, setUsername] = useState("")

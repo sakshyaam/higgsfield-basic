@@ -27,6 +27,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "@tanstack/react-query": "^5.104.2",
     "zod": "^4.6.6"
   }
 }

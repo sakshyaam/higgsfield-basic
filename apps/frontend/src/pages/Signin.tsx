@@ -10,8 +10,8 @@ export function Signin() {
       const [username, setUsername] = useState("")
       const  [password, setPassword] = useState("")
 
-      function Signup() {
-            axios.post(`${BACKEND_URL}/api/v1/signin` )
+      function handleSignin() {
+            axios.post(`${BACKEND_URL}/api/v1/signin`, { username, password })
       } 
 
 
@@ -30,7 +30,7 @@ export function Signin() {
                         setPassword(e.target.value)
                      }}>
                      </Input>
-               <Button variant={"outline"} onClick={Signup}> Signup</Button>
+               <Button variant={"outline"} onClick={handleSignin}> Sign in</Button>
          </Card>
          </div>
          </div>

@@ -14,7 +14,7 @@ export function Signup() {
 
       async function Signup() {
            try {
-             axios.post(`${BACKEND_URL}/api/v1/signin`,{
+             await axios.post(`${BACKEND_URL}/api/v1/signup`,{
                  username,
                  password
              })

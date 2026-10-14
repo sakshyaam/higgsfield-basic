@@ -5,7 +5,7 @@ import { useState } from "react";
 import axios from "axios"
 import { BACKEND_URL } from "../../config";
 import { data, useNavigate } from "react-router";
-import { Query, QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 
 

@@ -8,10 +8,10 @@ export function Appbar() {
       </div> 
   
        <div className="flex gap-2">  
-            <div className="flex item-center p-2">
+            <div className="flex items-center p-2">
                 <Button variant={"outline"}> SignIn</Button>  
               </div>     
-              <div className="flex item-center p-2">
+              <div className="flex items-center p-2">
                 <Button variant={"outline"}> SignUp </Button>                
               </div>
        </div>

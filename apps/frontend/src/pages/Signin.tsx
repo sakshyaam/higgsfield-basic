@@ -8,7 +8,7 @@ import { BACKEND_URL } from "../../config";
 export function Signin() {
 
       const [username, setUsername] = useState("")
-      const  [password, setPassword] = useState("")
+      const [password, setPassword] = useState("")
 
       function handleSignin() {
             axios.post(`${BACKEND_URL}/api/v1/signin`, { username, password })

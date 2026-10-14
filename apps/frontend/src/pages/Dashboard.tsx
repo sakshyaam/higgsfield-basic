@@ -2,7 +2,6 @@ import axios from "axios";
 import { useState } from "react"
 import { BACKEND_URL } from "../../config";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { data } from "react-router";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 

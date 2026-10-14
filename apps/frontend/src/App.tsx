@@ -19,7 +19,7 @@ export function App() {
              <Routes>
                <Route path = "/" element = {<Landing />} />
                <Route path = "/signin" element = {<Signin />} />
-               <Route path = "/signup" element = {<Signup />} /> 
+               <Route path = "/signup" element = {<Signup />} />
                <Route path = "/dashboard" element = {<Dashboard />} />
                <Route path = "/videocreate" element = {<VideoCreate />} />
              </Routes>
